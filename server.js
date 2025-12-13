@@ -114,9 +114,9 @@ if (text === '✅ Tayyor') {
 
     bot.sendMessage(chatId, report);
 
-    if (CHANNEL_USERNAME) {
+    if (CHANNEL_USERNAME && String(chatId) === process.env.ADMIN_ID) {
       bot.sendMessage(CHANNEL_USERNAME, report);
-    }
+}
 
     sessions[chatId] = { step: null, data: {} };
 
