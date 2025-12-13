@@ -107,10 +107,7 @@ if (text === '✅ Tayyor') {
       total += sum;
 
       report += `${key} — ${qty} x ${PRICES[key]} = ${sum.toFixed(2)}\n`;
-    }else if 
-  (text === '✅ Tayyor'){
-    return;
-  }
+    }
     
 
     report += `\n💰 Jami: ${total.toFixed(2)}`;
@@ -122,6 +119,15 @@ if (text === '✅ Tayyor') {
     }
 
     sessions[chatId] = { step: null, data: {} };
+
+    // Yana ➕ Qo‘shish bo‘limiga qaytarish
+    bot.sendMessage(chatId, 'Yangi ish qo‘shish uchun:', {
+      reply_markup: {
+        keyboard: [[{ text: '➕ Qo‘shish' }]],
+        resize_keyboard: true
+      }
+    });
+
     return;
   }
 });
