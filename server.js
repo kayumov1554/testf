@@ -107,8 +107,11 @@ if (text === '✅ Tayyor') {
       total += sum;
 
       report += `${key} — ${qty} x ${PRICES[key]} = ${sum.toFixed(2)}\n`;
-      return;
-    }
+    }else if 
+  (text === '✅ Tayyor'){
+    return;
+  }
+    
 
     report += `\n💰 Jami: ${total.toFixed(2)}`;
 
