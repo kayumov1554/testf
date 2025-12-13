@@ -97,12 +97,8 @@ bot.on('message', (msg) => {
     return;
   }
 
-  if (text === '✅ Tayyor') {
-    // hozirgi sana
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('ru-RU'); // O'zbekcha format, masalan: 13.12.2025
-
-    let report = `📄 HISOBOT — ${formattedDate}\n\n`;
+if (text === '✅ Tayyor') {
+    let report = '📄 HISOBOT\n\n';
     let total = 0;
 
     for (const key in session.data) {
@@ -114,7 +110,7 @@ bot.on('message', (msg) => {
     }
     return;
 
-    report += `\n💰 Jami: ${total.toFixed(2)} ₽ `;
+    report += `\n💰 Jami: ${total.toFixed(2)}`;
 
     bot.sendMessage(chatId, report);
 
@@ -124,4 +120,5 @@ bot.on('message', (msg) => {
 
     sessions[chatId] = { step: null, data: {} };
     return;
-}
+  }
+});
