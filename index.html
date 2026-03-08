@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK - Добро Пожаловать</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>TKK - Intro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
@@ -16,21 +15,16 @@
         body { 
             margin: 0; 
             overflow: hidden; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: #000;
         }
 
-        /* --- LOADER ASOSIY FONI --- */
         #loader { 
             position: fixed; 
-            width: 100%; 
-            height: 100vh; 
+            width: 100%; height: 100vh; 
             background: radial-gradient(circle, #2c3e50 0%, #000000 100%); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 3000; 
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center; 
+            z-index: 3000; overflow: hidden;
             transition: opacity 1s ease-in-out; 
         }
 
@@ -38,8 +32,7 @@
         .leaves-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            z-index: 1; pointer-events: none;
         }
 
         .leaf {
@@ -52,67 +45,66 @@
 
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
-        /* --- MATNLAR DIZAYNI --- */
+        /* --- MATNLAR --- */
         .loader-content { 
             text-align: center; 
             position: relative; 
             z-index: 10; 
-            width: 90%;
+            width: 100%;
         }
 
-        /* Umumiy harflar animatsiyasi stili */
         .anim-text {
             color: var(--white);
-            font-size: 1.8rem; /* Ekran sig'ishi uchun optimal o'lcham */
+            font-size: 1.6rem;
             font-weight: 800;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
+            padding: 0 10px;
         }
+
+        /* Ikkinchi matn uchun maxsus stil */
+        #text2-container {
+            color: var(--primary);
+            display: none;
+        }
+
+        .title-top { font-size: 1.8rem; margin-bottom: 5px; }
+        .title-bottom { font-size: 2.5rem; text-transform: uppercase; color: var(--primary); }
 
         .anim-text span {
             display: inline-block;
             opacity: 0;
-            transform: translateX(-50px);
+            transform: translateX(-30px);
             filter: blur(5px);
-            animation: slideInLeft 0.6s forwards;
+            animation: slideInLeft 0.5s forwards;
         }
 
         @keyframes slideInLeft {
-            to { 
-                opacity: 1; 
-                transform: translateX(0); 
-                filter: blur(0);
-            }
-        }
-
-        /* Ikkinchi matn yashil rangda */
-        #text2.anim-text {
-            color: var(--primary);
-            font-size: 2rem;
-            text-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+            to { opacity: 1; transform: translateX(0); filter: blur(0); }
         }
 
         /* --- IKONKALAR --- */
-        .icon-group {
+        #icons-container {
             margin-top: 30px;
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: var(--white);
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             opacity: 0;
-            animation: fadeIn 1s forwards;
-            animation-delay: 2s; /* Matndan keyin chiqadi */
+            visibility: hidden;
+            transition: opacity 1s ease;
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
+        #icons-container.show {
+            opacity: 1;
+            visibility: visible;
+        }
 
         .icon-group i {
             animation: iconPulse 2s infinite ease-in-out;
@@ -134,35 +126,49 @@
         <div class="loader-content">
             <div class="anim-text" id="text1">Добро Пожаловать</div>
 
-            <div class="anim-text hidden" id="text2">Тепличный Комплекс Камчатский</div>
+            <div id="text2-container">
+                <div class="anim-text title-top" id="text2-part1">Тепличный Комплекс</div>
+                <div class="anim-text title-bottom" id="text2-part2">Камчатский</div>
+            </div>
 
-            <div class="icon-group id="icons">
-                <i class="fas fa-seedling"></i> <i class="fas fa-leaf"></i>     <i class="fa-solid fa-apple-whole"></i> <i class="fa-solid fa-lemon"></i> <i class="fas fa-tree"></i>     </div>
+            <div id="icons-container" class="icon-group">
+                <i class="fas fa-seedling"></i>
+                <i class="fas fa-leaf"></i>
+                <i class="fa-solid fa-pepper-hot"></i> <i class="fa-solid fa-lemon"></i>
+                <i class="fas fa-tree"></i>
+            </div>
         </div>
     </div>
 
     <script>
-        function animateChars(elementId) {
+        function animateChars(elementId, callback) {
             const el = document.getElementById(elementId);
             const strText = el.textContent.trim();
             el.textContent = "";
-            el.classList.remove('hidden');
+            el.style.display = "flex";
 
-            for(let i=0; i < strText.length; i++) {
-                let char = strText[i] === " " ? "&nbsp;" : strText[i];
-                let delay = i * 0.05;
-                el.innerHTML += `<span style="animation-delay: ${delay}s">${char}</span>`;
-            }
+            let chars = strText.split("");
+            chars.forEach((char, i) => {
+                let span = document.createElement("span");
+                span.innerHTML = char === " " ? "&nbsp;" : char;
+                span.style.animationDelay = (i * 0.05) + "s";
+                el.appendChild(span);
+                
+                // Oxirgi harf yozib bo'linganda callbackni chaqirish
+                if (i === chars.length - 1 && callback) {
+                    span.addEventListener('animationend', callback);
+                }
+            });
         }
 
         window.onload = () => {
-            // 1. Birinchi matnni boshlash
-            animateChars('text1');
-            
-            // 2. Barglarni yaratish
+            // 1. Barglarni yaratish
             createLeaves();
 
-            // 3. Matnlarni almashtirish (3 sekunddan keyin)
+            // 2. Birinchi matn
+            animateChars('text1');
+
+            // 3. Birinchi matnni yo'qotib, ikkinchisini chiqarish
             setTimeout(() => {
                 const t1 = document.getElementById('text1');
                 t1.style.transition = "opacity 0.8s";
@@ -170,19 +176,24 @@
                 
                 setTimeout(() => {
                     t1.style.display = 'none';
-                    // Ikkinchi matnni xuddi birinchi kabi animatsiya bilan chiqarish
-                    animateChars('text2');
+                    document.getElementById('text2-container').style.display = 'block';
+                    
+                    // Ketma-ket yozish
+                    animateChars('text2-part1', () => {
+                        animateChars('text2-part2', () => {
+                            // Ikonkalarni faqat "Kamchatskiy" yozib bo'lingandan keyin ko'rsatish
+                            document.getElementById('icons-container').classList.add('show');
+                        });
+                    });
                 }, 800);
-            }, 3500);
+            }, 3000);
 
-            // 4. Loader-ni butunlay yopish (8 sekundda)
+            // 4. Loader yopilishi
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 1000);
-            }, 8000);
+                setTimeout(() => loader.style.display = 'none', 1000);
+            }, 9000);
         };
 
         function createLeaves() {
@@ -190,11 +201,9 @@
             for (let i = 0; i < 40; i++) {
                 const leaf = document.createElement('div');
                 leaf.className = 'leaf';
-                const size = Math.random() * 10 + 5 + 'px';
-                leaf.style.width = size;
-                leaf.style.height = size;
+                leaf.style.width = leaf.style.height = (Math.random() * 10 + 5) + 'px';
                 leaf.style.left = Math.random() * 100 + '%';
-                leaf.style.animationDuration = Math.random() * 3 + 4 + 's';
+                leaf.style.animationDuration = (Math.random() * 3 + 4) + 's';
                 leaf.style.animationDelay = Math.random() * 5 + 's';
                 target.appendChild(leaf);
             }
