@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK Tiplitsa PRO v4</title>
+    <title>TKK Tiplitsa PRO v5 (Cloud)</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #2ecc71; --dark: #1a1a2e; --white: #ffffff; --accent: #3498db; }
@@ -57,11 +58,6 @@
         .hist-comment { font-size: 0.85rem; color: #666; margin-top: 6px; border-left: 3px solid var(--primary); padding-left: 8px; }
         #add-btn-fixed { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5); border: none; z-index: 500; cursor: pointer; }
         .hidden { display: none; }
-
-        /* ARKIV DETAL STILLARI */
-        .archive-detail-item { background: #f8f9fa; border-radius: 15px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent); }
-        .archive-detail-date { font-weight: bold; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; display: block; }
-        .archive-detail-row { font-size: 0.9rem; margin: 5px 0; color: #444; }
     </style>
 </head>
 <body>
@@ -82,7 +78,7 @@
 
     <header>
         <div class="stats-card">
-            <small>Месячный доход</small>
+            <small id="user-display">Загрузка...</small>
             <div id="monthly-total">0 рублей</div>
         </div>
         <div class="nav-tabs">
@@ -114,9 +110,39 @@
     </div>
 
     <script>
-        let cards = JSON.parse(localStorage.getItem('tkk_data')) || [];
+        // --- FIREBASE SOZLAMALARI ---
+        const DB_URL = "https://console.firebase.google.com/u/0/project/kamchatka-80669/database/kamchatka-80669-default-rtdb/data/~2F?hl=ru-RU"; 
+
+        // Telegram WebApp orqali foydalanuvchini aniqlash
+        const tg = window.Telegram.WebApp;
+        const userId = tg.initDataUnsafe?.user?.id || "local_user";
+        const userName = tg.initDataUnsafe?.user?.first_name || "Foydalanuvchi";
+
+        let cards = [];
+        let archives = [];
         let editingCardId = null;
         const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
+
+        document.getElementById('user-display').innerText = userName + " (Доход)";
+
+        // --- BULUT BILAN SINXRONIZATSIYA ---
+        async function syncWithCloud(action = 'load') {
+            const endpoint = `${DB_URL}users/${userId}.json`;
+            if (action === 'save') {
+                try {
+                    await fetch(endpoint, { method: 'PUT', body: JSON.stringify({ cards, archives }) });
+                } catch (e) { console.error("Cloud Error (Save):", e); }
+            } else {
+                try {
+                    const res = await fetch(endpoint);
+                    const cloudData = await res.json();
+                    if (cloudData) {
+                        cards = cloudData.cards || [];
+                        archives = cloudData.archives || [];
+                    }
+                } catch (e) { console.error("Cloud Error (Load):", e); }
+            }
+        }
 
         // --- LOADER LOGIKASI ---
         function animateChars(elementId) {
@@ -144,8 +170,14 @@
             }
         }
 
-        window.onload = () => {
-            createLeaves(); animateChars('text1');
+        window.onload = async () => {
+            tg.expand(); // Telegram botni to'liq ekranga yoyish
+            createLeaves(); 
+            animateChars('text1');
+            
+            // Ma'lumotlarni yuklash (Parallel ravishda animatsiya bilan)
+            await syncWithCloud('load');
+
             setTimeout(() => {
                 const t1 = document.getElementById('text1');
                 t1.style.transition = "opacity 0.6s"; t1.style.opacity = "0";
@@ -155,12 +187,17 @@
                     animateChars('text2-part1'); animateChars('text2-part2');
                     setTimeout(() => document.getElementById('icons-container').classList.add('show'), 1200);
                 }, 600);
-            }, 3000);
+            }, 2500);
+
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
-                setTimeout(() => { loader.style.display = 'none'; checkMonthTransition(); renderAll(); }, 1000);
-            }, 8500);
+                setTimeout(() => { 
+                    loader.style.display = 'none'; 
+                    checkMonthTransition(); 
+                    renderAll(); 
+                }, 1000);
+            }, 7500);
         };
 
         // --- ASOSIY FUNKSIYALAR ---
@@ -189,20 +226,23 @@
         }
 
         function closeModal() { document.getElementById('modal').style.display = 'none'; editingCardId = null; }
+        
         function calc() {
             const c = document.getElementById('input-count').value || 0;
             const k = document.getElementById('input-coeff').value || 0;
             document.getElementById('preview-total').innerText = (c * k).toLocaleString();
         }
 
-        function saveEntry() {
+        async function saveEntry() {
             const c = parseFloat(document.getElementById('input-count').value);
             const k = parseFloat(document.getElementById('input-coeff').value);
             const comment = document.getElementById('input-comment').value || "Нет комментарии";
             if(!c || !k) return alert("Пожалуйста введите данные");
+            
             const val = c * k;
             const newEntry = { id: Date.now(), c, k, val, comment };
             const today = new Date().toLocaleDateString();
+
             if (editingCardId) {
                 cards = cards.map(card => {
                     if (card.id === editingCardId) {
@@ -215,9 +255,12 @@
                 const newCard = { id: Date.now(), date: today, total: val, history: [newEntry] };
                 cards.push(newCard); editingCardId = newCard.id;
             }
-            localStorage.setItem('tkk_data', JSON.stringify(cards));
+            
+            await syncWithCloud('save');
             renderAll(); renderHistory();
-            document.getElementById('input-count').value = ''; document.getElementById('input-coeff').value = ''; document.getElementById('preview-total').innerText = '0';
+            document.getElementById('input-count').value = ''; 
+            document.getElementById('input-coeff').value = ''; 
+            document.getElementById('preview-total').innerText = '0';
         }
 
         function renderAll() {
@@ -249,14 +292,27 @@
             }
         }
 
-        function deleteEntry(cardId, entryId) {
+        async function deleteEntry(cardId, entryId) {
             if(!confirm("Удалить?")) return;
-            cards = cards.map(card => { if(card.id === cardId) { card.history = card.history.filter(e => e.id !== entryId); card.total = card.history.reduce((s, item) => s + item.val, 0); } return card; });
+            cards = cards.map(card => { 
+                if(card.id === cardId) { 
+                    card.history = card.history.filter(e => e.id !== entryId); 
+                    card.total = card.history.reduce((s, item) => s + item.val, 0); 
+                } 
+                return card; 
+            });
             cards = cards.filter(card => card.history.length > 0);
-            localStorage.setItem('tkk_data', JSON.stringify(cards)); renderAll(); renderHistory();
+            await syncWithCloud('save'); 
+            renderAll(); renderHistory();
         }
 
-        function deleteCard(id) { if(confirm("Удалить все данные за сегодня?")) { cards = cards.filter(c => c.id !== id); localStorage.setItem('tkk_data', JSON.stringify(cards)); renderAll(); } }
+        async function deleteCard(id) { 
+            if(confirm("Удалить все данные за сегодня?")) { 
+                cards = cards.filter(c => c.id !== id); 
+                await syncWithCloud('save'); 
+                renderAll(); 
+            } 
+        }
 
         function switchTab(tab, btn) {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
@@ -267,16 +323,15 @@
         }
 
         // --- ARXIV MANTIQI ---
-        function checkMonthTransition() {
+        async function checkMonthTransition() {
             const now = new Date();
             const currentMonthKey = `${now.getFullYear()}-${monthNames[now.getMonth()]}`;
             const lastMonthKey = localStorage.getItem('tkk_last_month');
             if (lastMonthKey && lastMonthKey !== currentMonthKey) {
-                let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
                 if (cards.length > 0) {
                     archives.push({ id: Date.now(), monthName: lastMonthKey, total: cards.reduce((s, c) => s + c.total, 0), fullData: [...cards] });
-                    localStorage.setItem('tkk_archives', JSON.stringify(archives));
-                    localStorage.setItem('tkk_data', "[]"); cards = [];
+                    cards = [];
+                    await syncWithCloud('save');
                 }
             }
             localStorage.setItem('tkk_last_month', currentMonthKey);
@@ -284,7 +339,6 @@
 
         function renderArchive() {
             const container = document.getElementById('archive-container');
-            const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
             container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Архив пусто</p>';
             archives.slice().reverse().forEach(arc => {
                 container.innerHTML += `
@@ -299,7 +353,6 @@
         }
 
         function viewArchiveDetail(archiveId) {
-            const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
             const arc = archives.find(a => a.id === archiveId);
             if(!arc) return;
 
@@ -309,11 +362,12 @@
             list.innerHTML = `<div style="padding:10px; background:#eaf2f8; border-radius:10px; margin-bottom:15px; text-align:center; font-weight:bold; color:var(--accent)">Общий итог: ${arc.total.toLocaleString()} ₽</div>`;
             
             arc.fullData.sort((a,b) => b.id - a.id).forEach(day => {
-                let dayHistory = day.history.map(h => `<div class="archive-detail-row">• ${h.c}x${h.k}=${h.val} <br><i style="font-size:0.8rem; color:#888">${h.comment}</i></div>`).join('');
-                list.innerHTML += `<div class="archive-detail-item"><span class="archive-detail-date">${day.date}</span>${dayHistory}<div style="text-align:right; font-weight:bold; color:var(--primary); margin-top:5px;">${day.total.toLocaleString()} ₽</div></div>`;
+                let dayHistory = day.history.map(h => `<div style="font-size: 0.9rem; margin: 5px 0; color: #444;">• ${h.c}x${h.k}=${h.val} <br><i style="font-size:0.8rem; color:#888">${h.comment}</i></div>`).join('');
+                list.innerHTML += `<div style="background: #f8f9fa; border-radius: 15px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent);"><span style="font-weight: bold; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; display: block;">${day.date}</span>${dayHistory}<div style="text-align:right; font-weight:bold; color:var(--primary); margin-top:5px;">${day.total.toLocaleString()} ₽</div></div>`;
             });
             document.getElementById('modal').style.display = 'flex';
         }
     </script>
 </body>
 </html>
+
