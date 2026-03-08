@@ -9,7 +9,7 @@
         :root { --primary: #2ecc71; --dark: #1a1a2e; --white: #ffffff; --accent: #3498db; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle, #2c3e50 0%, #000000 100%); padding-bottom: 80px; }
         
-        /* --- YANGI ANIMATSIYA VA LOADER --- */
+        /* --- LOADER --- */
         #loader { 
             position: fixed; width: 100%; height: 100vh; 
             background: radial-gradient(circle, #2c3e50 0%, #000000 100%); 
@@ -17,90 +17,51 @@
             z-index: 3000; overflow: hidden;
             transition: opacity 1s ease-in-out; 
         }
-
-        .leaves-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2; pointer-events: none;
-        }
-
-        .leaf {
-            position: absolute; background-color: var(--primary);
-            opacity: 0.8; border-radius: 2px 15px 2px 15px;
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.8; }
-            80% { opacity: 0.8; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
+        .leaves-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+        .leaf { position: absolute; background-color: var(--primary); opacity: 0.8; border-radius: 2px 15px 2px 15px; box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; } 20% { opacity: 0.8; } 80% { opacity: 0.8; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         .loader-content { text-align: center; position: relative; z-index: 10; width: 100%; }
-
-        .anim-text {
-            font-weight: 800; display: flex; justify-content: center;
-            flex-wrap: wrap; padding: 0 10px; color: var(--white);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-        }
-
+        .anim-text { font-weight: 800; display: flex; justify-content: center; flex-wrap: wrap; padding: 0 10px; color: var(--white); text-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
         #text1 { font-size: 1.6rem; }
         .title-top { font-size: 1.8rem; margin-bottom: 5px; }
         .title-bottom { font-size: 2.3rem; text-transform: uppercase; }
-
-        .anim-text span {
-            display: inline-block; opacity: 0; transform: translateX(-40px);
-            filter: blur(5px); animation: slideInLeft 0.6s forwards;
-        }
-
-        @keyframes slideInLeft {
-            to { opacity: 1; transform: translateX(0); filter: blur(0); }
-        }
-
-        #icons-container {
-            margin-top: 30px; font-size: 2.2rem; color: var(--white);
-            display: flex; justify-content: center; gap: 20px;
-            opacity: 0; transition: opacity 1s ease;
-        }
-
+        .anim-text span { display: inline-block; opacity: 0; transform: translateX(-40px); filter: blur(5px); animation: slideInLeft 0.6s forwards; }
+        @keyframes slideInLeft { to { opacity: 1; transform: translateX(0); filter: blur(0); } }
+        #icons-container { margin-top: 30px; font-size: 2.2rem; color: var(--white); display: flex; justify-content: center; gap: 20px; opacity: 0; transition: opacity 1s ease; }
         #icons-container.show { opacity: 1; }
         .icon-group i { animation: iconPulse 2s infinite ease-in-out; }
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); color: var(--white); }
-            50% { transform: scale(1.2); color: var(--primary); }
-        }
+        @keyframes iconPulse { 0%, 100% { transform: scale(1); color: var(--white); } 50% { transform: scale(1.2); color: var(--primary); } }
 
         /* --- ASOSIY DIZAYN --- */
         header { background: var(--primary); padding: 20px; color: white; text-align: center; border-radius: 0 0 30px 30px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .stats-card { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 15px; margin: 10px 0; border: 1px solid rgba(255,255,255,0.3); }
         #monthly-total { font-size: 1.7rem; font-weight: bold; }
-        
         .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         .nav-btn { background: rgba(255,255,255,0.3); border: none; padding: 10px 25px; border-radius: 20px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .nav-btn.active { background: white; color: var(--primary); transform: scale(1.05); }
-
         .content-section { padding: 15px; }
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; border-left: 10px solid #ddd; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        
         .level-3000 { border-left-color: #f1c40f; background: #fffdf2; }
         .level-4000 { border-left-color: #e67e22; background: #fff9f2; }
         .level-5000 { border-left-color: #e74c3c; background: #fff5f5; }
-        
         .card-header { display: flex; justify-content: space-between; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 10px; }
         .card-val { font-size: 1.5rem; font-weight: bold; color: #1a1a2e; }
 
+        /* MODAL */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 25px; max-height: 85vh; overflow-y: auto; }
         input, textarea { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #eee; border-radius: 15px; box-sizing: border-box; font-size: 1rem; background: #f9f9f9; }
-        
         .history-item { background: #fdfdfd; padding: 15px; border-radius: 15px; margin-top: 12px; border: 1px solid #f0f0f0; position: relative; }
         .hist-top { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
         .item-delete-btn { position: absolute; top: 12px; right: 12px; color: #e74c3c; cursor: pointer; font-size: 1.2rem; }
         .hist-comment { font-size: 0.85rem; color: #666; margin-top: 6px; border-left: 3px solid var(--primary); padding-left: 8px; }
-
         #add-btn-fixed { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5); border: none; z-index: 500; cursor: pointer; }
         .hidden { display: none; }
+
+        /* ARKIV DETAL STILLARI */
+        .archive-detail-item { background: #f8f9fa; border-radius: 15px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent); }
+        .archive-detail-date { font-weight: bold; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; display: block; }
+        .archive-detail-row { font-size: 0.9rem; margin: 5px 0; color: #444; }
     </style>
 </head>
 <body>
@@ -113,11 +74,7 @@
                 <div class="anim-text title-top" id="text2-part1">Тепличный Комплекс</div>
                 <div class="anim-text title-bottom" id="text2-part2">Камчатский</div>
                 <div id="icons-container" class="icon-group">
-                    <i class="fas fa-seedling"></i>
-                    <i class="fas fa-leaf"></i>
-                    <i class="fa-solid fa-pepper-hot"></i>
-                    <i class="fa-solid fa-lemon"></i>
-                    <i class="fas fa-tree"></i>
+                    <i class="fas fa-seedling"></i><i class="fas fa-leaf"></i><i class="fa-solid fa-pepper-hot"></i><i class="fa-solid fa-lemon"></i><i class="fas fa-tree"></i>
                 </div>
             </div>
         </div>
@@ -134,30 +91,24 @@
         </div>
     </header>
 
-    <section id="current-section" class="content-section">
-        <div id="cards-container"></div>
-    </section>
-
-    <section id="archive-section" class="content-section hidden">
-        <div id="archive-container"></div>
-    </section>
+    <section id="current-section" class="content-section"><div id="cards-container"></div></section>
+    <section id="archive-section" class="content-section hidden"><div id="archive-container"></div></section>
 
     <button id="add-btn-fixed" onclick="openModal()"><i class="fas fa-plus"></i></button>
 
     <div id="modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" id="modal-inner">
             <h3 id="modal-title" style="margin-top:0; color:#1a1a2e;">Добавить</h3>
-            <input type="number" id="input-count" placeholder="Количество" oninput="calc()">
-            <input type="number" id="input-coeff" placeholder="Коэффициент" step="0.1" oninput="calc()">
-            <textarea id="input-comment" placeholder="Комментарии" rows="2"></textarea>
-            
-            <div style="background:#eafaf1; padding:15px; border-radius:15px; text-align:center; font-weight:bold; margin:10px 0; color:var(--primary); font-size:1.1rem;">
-                Общего <span id="preview-total">0</span> рублей
+            <div id="modal-form-area">
+                <input type="number" id="input-count" placeholder="Количество" oninput="calc()">
+                <input type="number" id="input-coeff" placeholder="Коэффициент" step="0.1" oninput="calc()">
+                <textarea id="input-comment" placeholder="Комментарии" rows="2"></textarea>
+                <div style="background:#eafaf1; padding:15px; border-radius:15px; text-align:center; font-weight:bold; margin:10px 0; color:var(--primary); font-size:1.1rem;">
+                    Общего <span id="preview-total">0</span> рублей
+                </div>
+                <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; font-size:1rem; cursor:pointer;">Добавить</button>
             </div>
-            
-            <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; font-size:1rem; cursor:pointer;">Добавить</button>
             <button onclick="closeModal()" style="width:100%; background:#f1f2f6; border:none; padding:12px; border-radius:15px; margin-top:10px; cursor:pointer;">Назад</button>
-            
             <div id="history-list" style="margin-top:25px"></div>
         </div>
     </div>
@@ -165,13 +116,13 @@
     <script>
         let cards = JSON.parse(localStorage.getItem('tkk_data')) || [];
         let editingCardId = null;
+        const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
 
-        // --- YANGI ANIMATSIYA LOGIKASI ---
+        // --- LOADER LOGIKASI ---
         function animateChars(elementId) {
             const el = document.getElementById(elementId);
             const strText = el.textContent.trim();
-            el.textContent = "";
-            el.style.display = "flex";
+            el.textContent = ""; el.style.display = "flex";
             strText.split("").forEach((char, i) => {
                 let span = document.createElement("span");
                 span.innerHTML = char === " " ? "&nbsp;" : char;
@@ -179,7 +130,6 @@
                 el.appendChild(span);
             });
         }
-
         function createLeaves() {
             const target = document.getElementById('leavesTarget');
             for (let i = 0; i < 45; i++) {
@@ -195,41 +145,27 @@
         }
 
         window.onload = () => {
-            createLeaves();
-            animateChars('text1');
-
+            createLeaves(); animateChars('text1');
             setTimeout(() => {
                 const t1 = document.getElementById('text1');
-                t1.style.transition = "opacity 0.6s";
-                t1.style.opacity = "0";
-                
+                t1.style.transition = "opacity 0.6s"; t1.style.opacity = "0";
                 setTimeout(() => {
                     t1.style.display = 'none';
-                    const container2 = document.getElementById('text2-container');
-                    container2.classList.remove('hidden');
-                    animateChars('text2-part1');
-                    animateChars('text2-part2');
-                    
-                    setTimeout(() => {
-                        document.getElementById('icons-container').classList.add('show');
-                    }, 1200);
+                    document.getElementById('text2-container').classList.remove('hidden');
+                    animateChars('text2-part1'); animateChars('text2-part2');
+                    setTimeout(() => document.getElementById('icons-container').classList.add('show'), 1200);
                 }, 600);
             }, 3000);
-
-            // Loader yopilishi va asosiy funksiyalarni yuklash
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    checkMonthTransition();
-                    renderAll();
-                }, 1000);
+                setTimeout(() => { loader.style.display = 'none'; checkMonthTransition(); renderAll(); }, 1000);
             }, 8500);
         };
 
-        // --- ASOSIY FUNKSIYALAR (TEGILMADI) ---
+        // --- ASOSIY FUNKSIYALAR ---
         function openModal(id = null) {
+            resetModalUI();
             const today = new Date().toLocaleDateString();
             const existingCard = cards.find(c => c.date === today);
             if (id === null) {
@@ -240,16 +176,19 @@
                 const c = cards.find(x => x.id === id);
                 document.getElementById('modal-title').innerText = c.date + " информации";
             }
-            document.getElementById('input-count').value = '';
-            document.getElementById('input-coeff').value = '';
-            document.getElementById('input-comment').value = '';
-            document.getElementById('preview-total').innerText = '0';
             document.getElementById('modal').style.display = 'flex';
             renderHistory();
         }
 
-        function closeModal() { document.getElementById('modal').style.display = 'none'; editingCardId = null; }
+        function resetModalUI() {
+            document.getElementById('modal-form-area').style.display = 'block';
+            document.getElementById('input-count').value = '';
+            document.getElementById('input-coeff').value = '';
+            document.getElementById('input-comment').value = '';
+            document.getElementById('preview-total').innerText = '0';
+        }
 
+        function closeModal() { document.getElementById('modal').style.display = 'none'; editingCardId = null; }
         function calc() {
             const c = document.getElementById('input-count').value || 0;
             const k = document.getElementById('input-coeff').value || 0;
@@ -260,7 +199,7 @@
             const c = parseFloat(document.getElementById('input-count').value);
             const k = parseFloat(document.getElementById('input-coeff').value);
             const comment = document.getElementById('input-comment').value || "Нет комментарии";
-            if(!c || !k) return alert("Пожалуйста посмотрите на данные");
+            if(!c || !k) return alert("Пожалуйста введите данные");
             const val = c * k;
             const newEntry = { id: Date.now(), c, k, val, comment };
             const today = new Date().toLocaleDateString();
@@ -274,48 +213,24 @@
                 });
             } else {
                 const newCard = { id: Date.now(), date: today, total: val, history: [newEntry] };
-                cards.push(newCard);
-                editingCardId = newCard.id;
+                cards.push(newCard); editingCardId = newCard.id;
             }
             localStorage.setItem('tkk_data', JSON.stringify(cards));
             renderAll(); renderHistory();
-            document.getElementById('input-count').value = '';
-            document.getElementById('input-coeff').value = '';
-            document.getElementById('preview-total').innerText = '0';
-        }
-
-        function deleteEntry(cardId, entryId) {
-            if(!confirm("Удалить ?")) return;
-            cards = cards.map(card => {
-                if(card.id === cardId) {
-                    card.history = card.history.filter(e => e.id !== entryId);
-                    card.total = card.history.reduce((s, item) => s + item.val, 0);
-                }
-                return card;
-            });
-            cards = cards.filter(card => card.history.length > 0);
-            localStorage.setItem('tkk_data', JSON.stringify(cards));
-            renderAll(); renderHistory();
+            document.getElementById('input-count').value = ''; document.getElementById('input-coeff').value = ''; document.getElementById('preview-total').innerText = '0';
         }
 
         function renderAll() {
             const container = document.getElementById('cards-container');
-            container.innerHTML = '';
-            let monthTotal = 0;
+            container.innerHTML = ''; let monthTotal = 0;
             cards.sort((a,b) => b.id - a.id).forEach(card => {
                 monthTotal += card.total;
                 let lvl = card.total >= 5000 ? 'level-5000' : card.total >= 4000 ? 'level-4000' : card.total >= 3000 ? 'level-3000' : '';
                 container.innerHTML += `
                     <div class="card ${lvl}" onclick="openModal(${card.id})">
-                        <div class="card-header">
-                            <span><i class="far fa-calendar-alt"></i> ${card.date}</span>
-                            <i class="fas fa-trash-alt" style="color:#d1d8e0" onclick="event.stopPropagation(); deleteCard(${card.id})"></i>
-                        </div>
+                        <div class="card-header"><span><i class="far fa-calendar-alt"></i> ${card.date}</span><i class="fas fa-trash-alt" style="color:#d1d8e0" onclick="event.stopPropagation(); deleteCard(${card.id})"></i></div>
                         <div style="display:flex; justify-content:space-between; align-items:center">
-                            <div>
-                                <div class="card-val">${card.total.toLocaleString()}  рублей</div>
-                                <small>${card.history.length} Операции</small>
-                            </div>
+                            <div><div class="card-val">${card.total.toLocaleString()} ₽</div><small>${card.history.length} Операции</small></div>
                             <div style="font-size: 32px">${card.total >= 5000 ? '🌳' : card.total >= 3000 ? '🌿' : '🌱'}</div>
                         </div>
                     </div>`;
@@ -329,66 +244,41 @@
             list.innerHTML = card ? '<b style="color:#1a1a2e">История</b>' : '';
             if(card) {
                 card.history.slice().reverse().forEach(h => {
-                    list.innerHTML += `
-                        <div class="history-item">
-                            <div class="hist-top">
-                                <span>${h.c} x ${h.k} = ${h.val.toLocaleString()}</span>
-                                <i class="fas fa-times-circle item-delete-btn" onclick="deleteEntry(${card.id}, ${h.id})"></i>
-                            </div>
-                            <div class="hist-comment">${h.comment}</div>
-                        </div>`;
+                    list.innerHTML += `<div class="history-item"><div class="hist-top"><span>${h.c} x ${h.k} = ${h.val.toLocaleString()}</span><i class="fas fa-times-circle item-delete-btn" onclick="deleteEntry(${card.id}, ${h.id})"></i></div><div class="hist-comment">${h.comment}</div></div>`;
                 });
             }
         }
 
-        function deleteCard(id) {
-            if(confirm("Удалить все данные сегодняшний?")) {
-                cards = cards.filter(c => c.id !== id);
-                localStorage.setItem('tkk_data', JSON.stringify(cards));
-                renderAll();
-            }
+        function deleteEntry(cardId, entryId) {
+            if(!confirm("Удалить?")) return;
+            cards = cards.map(card => { if(card.id === cardId) { card.history = card.history.filter(e => e.id !== entryId); card.total = card.history.reduce((s, item) => s + item.val, 0); } return card; });
+            cards = cards.filter(card => card.history.length > 0);
+            localStorage.setItem('tkk_data', JSON.stringify(cards)); renderAll(); renderHistory();
         }
 
+        function deleteCard(id) { if(confirm("Удалить все данные за сегодня?")) { cards = cards.filter(c => c.id !== id); localStorage.setItem('tkk_data', JSON.stringify(cards)); renderAll(); } }
+
         function switchTab(tab, btn) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             document.getElementById('current-section').classList.toggle('hidden', tab !== 'current');
             document.getElementById('archive-section').classList.toggle('hidden', tab !== 'archive');
             document.getElementById('add-btn-fixed').classList.toggle('hidden', tab !== 'current');
             if(tab === 'archive') renderArchive();
         }
 
-                // 1. Oylarni nomlash uchun lug'at
-        const monthNames = [
-            "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
-            "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"
-        ];
-
+        // --- ARXIV MANTIQI ---
         function checkMonthTransition() {
             const now = new Date();
-            // Joriy oy va yilni inson tilida yaratish (masalan: 2026-Mart)
             const currentMonthKey = `${now.getFullYear()}-${monthNames[now.getMonth()]}`;
             const lastMonthKey = localStorage.getItem('tkk_last_month');
-
-            // Agar yangi oyga o'tilgan bo'lsa
             if (lastMonthKey && lastMonthKey !== currentMonthKey) {
                 let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
-                
-                // Agar joriy oyda ma'lumot bo'lsa, uni arxivga o'tkazish
                 if (cards.length > 0) {
-                    archives.push({ 
-                        id: Date.now(), 
-                        monthName: lastMonthKey, // Eski oy nomi bilan saqlaydi
-                        total: cards.reduce((s, c) => s + c.total, 0) 
-                    });
+                    archives.push({ id: Date.now(), monthName: lastMonthKey, total: cards.reduce((s, c) => s + c.total, 0), fullData: [...cards] });
                     localStorage.setItem('tkk_archives', JSON.stringify(archives));
-                    
-                    // Eski ma'lumotlarni o'chirib, yangi oy uchun tozalaymiz
-                    localStorage.setItem('tkk_data', "[]");
-                    cards = [];
+                    localStorage.setItem('tkk_data', "[]"); cards = [];
                 }
             }
-            // Joriy oyni xotiraga yozib qo'yamiz
             localStorage.setItem('tkk_last_month', currentMonthKey);
         }
 
@@ -396,33 +286,33 @@
             const container = document.getElementById('archive-container');
             const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
             container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Архив пусто</p>';
-            
-            archives.reverse().forEach(arc => {
+            archives.slice().reverse().forEach(arc => {
                 container.innerHTML += `
-                <div class="card" style="border-left:8px solid var(--accent)">
-                    <small style="color:#7f8c8d">Доход за месяц</small>
+                <div class="card" style="border-left:8px solid var(--accent); cursor:pointer" onclick="viewArchiveDetail(${arc.id})">
+                    <small style="color:#7f8c8d">Нажмите, чтобы увидеть детали</small>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
                         <b style="font-size:1.1rem">${arc.monthName}</b>
-                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} рублей</b>
+                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} ₽</b>
                     </div>
                 </div>`;
             });
         }
 
-
-        function renderArchive() {
-            const container = document.getElementById('archive-container');
+        function viewArchiveDetail(archiveId) {
             const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
-            container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Архив пусто</p>';
-            archives.reverse().forEach(arc => {
-                container.innerHTML += `<div class="card" style="border-left:8px solid var(--accent)">
-                    <small style="color:#7f8c8d">Месячный Доход</small>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
-                        <b style="font-size:1.1rem">${arc.monthName}</b>
-                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()}  рублей</b>
-                    </div>
-                </div>`;
+            const arc = archives.find(a => a.id === archiveId);
+            if(!arc) return;
+
+            document.getElementById('modal-title').innerText = arc.monthName + " (Детали)";
+            document.getElementById('modal-form-area').style.display = 'none';
+            const list = document.getElementById('history-list');
+            list.innerHTML = `<div style="padding:10px; background:#eaf2f8; border-radius:10px; margin-bottom:15px; text-align:center; font-weight:bold; color:var(--accent)">Общий итог: ${arc.total.toLocaleString()} ₽</div>`;
+            
+            arc.fullData.sort((a,b) => b.id - a.id).forEach(day => {
+                let dayHistory = day.history.map(h => `<div class="archive-detail-row">• ${h.c}x${h.k}=${h.val} <br><i style="font-size:0.8rem; color:#888">${h.comment}</i></div>`).join('');
+                list.innerHTML += `<div class="archive-detail-item"><span class="archive-detail-date">${day.date}</span>${dayHistory}<div style="text-align:right; font-weight:bold; color:var(--primary); margin-top:5px;">${day.total.toLocaleString()} ₽</div></div>`;
             });
+            document.getElementById('modal').style.display = 'flex';
         }
     </script>
 </body>
