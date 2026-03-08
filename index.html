@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK Intro Fixed</title>
+    <title>TKK Intro Final</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
@@ -27,23 +27,27 @@
             transition: opacity 1s ease-in-out; 
         }
 
-        /* --- BARGLAR --- */
+        /* --- BARGLAR (KUCHAYTIRILDI) --- */
         .leaves-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; pointer-events: none;
+            z-index: 2; /* Matn ostida, lekin ko'rinadi */
+            pointer-events: none;
         }
 
         .leaf {
             position: absolute;
             background-color: var(--primary);
-            opacity: 0.4;
-            border-radius: 2px 12px 2px 12px;
+            opacity: 0.8; /* Barglar aniqroq ko'rinishi uchun */
+            border-radius: 2px 15px 2px 15px;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
             animation: fall linear infinite;
         }
 
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
@@ -61,16 +65,13 @@
             justify-content: center;
             flex-wrap: wrap;
             padding: 0 10px;
-            color: var(--primary);
-            text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+            color: var(--white); /* BARCHA MATNLAR OQ RANGDA */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
-
-        #text1 { color: var(--white); font-size: 1.6rem; }
 
         .title-top { font-size: 1.8rem; margin-bottom: 5px; }
         .title-bottom { font-size: 2.3rem; text-transform: uppercase; }
 
-        /* Har bir harf uchun animatsiya */
         .anim-text span {
             display: inline-block;
             opacity: 0;
@@ -142,7 +143,6 @@
             strText.split("").forEach((char, i) => {
                 let span = document.createElement("span");
                 span.innerHTML = char === " " ? "&nbsp;" : char;
-                // Har bir harfga bir xil kechikish mantiqi
                 span.style.animationDelay = (i * 0.04) + "s";
                 el.appendChild(span);
             });
@@ -151,10 +151,10 @@
         window.onload = () => {
             createLeaves();
 
-            // 1. Birinchi matnni boshlash
+            // 1. Birinchi matn
             animateChars('text1');
 
-            // 2. Matnlarni almashtirish
+            // 2. O'tish mantiqi
             setTimeout(() => {
                 const t1 = document.getElementById('text1');
                 t1.style.transition = "opacity 0.6s";
@@ -165,19 +165,17 @@
                     const container2 = document.getElementById('text2-container');
                     container2.classList.remove('hidden');
                     
-                    // IKKALASINI BIR VAQTDA BOSHLASH
+                    // Ikkala qatorni BIR VAQTDA boshlash
                     animateChars('text2-part1');
                     animateChars('text2-part2');
                     
-                    // Ikonkalarni bir ozdan keyin ko'rsatish
                     setTimeout(() => {
                         document.getElementById('icons-container').classList.add('show');
                     }, 1200);
-                    
                 }, 600);
             }, 3000);
 
-            // 3. Loader yopilishi
+            // 3. Yopilish
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
@@ -187,12 +185,15 @@
 
         function createLeaves() {
             const target = document.getElementById('leavesTarget');
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 45; i++) {
                 const leaf = document.createElement('div');
                 leaf.className = 'leaf';
-                leaf.style.width = leaf.style.height = (Math.random() * 8 + 5) + 'px';
+                // Barglar biroz kattaroq va turlicha
+                const size = (Math.random() * 10 + 7) + 'px';
+                leaf.style.width = size;
+                leaf.style.height = size;
                 leaf.style.left = Math.random() * 100 + '%';
-                leaf.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                leaf.style.animationDuration = (Math.random() * 4 + 4) + 's';
                 leaf.style.animationDelay = Math.random() * 5 + 's';
                 target.appendChild(leaf);
             }
