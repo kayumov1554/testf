@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK - Intro</title>
+    <title>TKK Intro PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --primary: #2ecc71; 
-            --dark: #1a1a2e; 
+            --primary: #2ecc71; /* Yagona yashil rang */
             --white: #ffffff; 
         }
 
@@ -38,13 +37,15 @@
         .leaf {
             position: absolute;
             background-color: var(--primary);
-            opacity: 0.5;
+            opacity: 0.4;
             border-radius: 2px 12px 2px 12px;
             animation: fall linear infinite;
         }
 
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
@@ -57,29 +58,24 @@
         }
 
         .anim-text {
-            color: var(--white);
-            font-size: 1.6rem;
             font-weight: 800;
-            letter-spacing: 1px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             padding: 0 10px;
+            color: var(--primary); /* Ikkala matn ham yashil */
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
         }
 
-        /* Ikkinchi matn uchun maxsus stil */
-        #text2-container {
-            color: var(--primary);
-            display: none;
-        }
+        #text1 { color: var(--white); font-size: 1.6rem; } /* Faqat birinchi matn oq */
 
         .title-top { font-size: 1.8rem; margin-bottom: 5px; }
-        .title-bottom { font-size: 2.5rem; text-transform: uppercase; color: var(--primary); }
+        .title-bottom { font-size: 2.3rem; text-transform: uppercase; }
 
         .anim-text span {
             display: inline-block;
             opacity: 0;
-            transform: translateX(-30px);
+            transform: translateX(-40px);
             filter: blur(5px);
             animation: slideInLeft 0.5s forwards;
         }
@@ -91,11 +87,11 @@
         /* --- IKONKALAR --- */
         #icons-container {
             margin-top: 30px;
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--white);
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             opacity: 0;
             visibility: hidden;
             transition: opacity 1s ease;
@@ -126,7 +122,7 @@
         <div class="loader-content">
             <div class="anim-text" id="text1">Добро Пожаловать</div>
 
-            <div id="text2-container">
+            <div id="text2-container" class="hidden">
                 <div class="anim-text title-top" id="text2-part1">Тепличный Комплекс</div>
                 <div class="anim-text title-bottom" id="text2-part2">Камчатский</div>
             </div>
@@ -134,61 +130,62 @@
             <div id="icons-container" class="icon-group">
                 <i class="fas fa-seedling"></i>
                 <i class="fas fa-leaf"></i>
-                <i class="fa-solid fa-pepper-hot"></i> <i class="fa-solid fa-lemon"></i>
+                <i class="fa-solid fa-pepper-hot"></i>
+                <i class="fa-solid fa-lemon"></i>
                 <i class="fas fa-tree"></i>
             </div>
         </div>
     </div>
 
     <script>
+        // Harflarni animatsiya qilish funksiyasi
         function animateChars(elementId, callback) {
             const el = document.getElementById(elementId);
             const strText = el.textContent.trim();
             el.textContent = "";
             el.style.display = "flex";
 
-            let chars = strText.split("");
-            chars.forEach((char, i) => {
+            strText.split("").forEach((char, i) => {
                 let span = document.createElement("span");
                 span.innerHTML = char === " " ? "&nbsp;" : char;
                 span.style.animationDelay = (i * 0.05) + "s";
                 el.appendChild(span);
                 
-                // Oxirgi harf yozib bo'linganda callbackni chaqirish
-                if (i === chars.length - 1 && callback) {
-                    span.addEventListener('animationend', callback);
+                // Oxirgi harf tugaganda keyingi bosqichga o'tish
+                if (i === strText.length - 1 && callback) {
+                    span.addEventListener('animationend', callback, {once: true});
                 }
             });
         }
 
         window.onload = () => {
-            // 1. Barglarni yaratish
             createLeaves();
 
-            // 2. Birinchi matn
+            // 1-bosqich: Dobro pojalovat
             animateChars('text1');
 
-            // 3. Birinchi matnni yo'qotib, ikkinchisini chiqarish
+            // 2-bosqich: Matn almashishi
             setTimeout(() => {
                 const t1 = document.getElementById('text1');
-                t1.style.transition = "opacity 0.8s";
+                t1.style.transition = "opacity 0.6s";
                 t1.style.opacity = "0";
                 
                 setTimeout(() => {
                     t1.style.display = 'none';
-                    document.getElementById('text2-container').style.display = 'block';
+                    const container2 = document.getElementById('text2-container');
+                    container2.classList.remove('hidden');
                     
-                    // Ketma-ket yozish
+                    // Ketma-ket va bir xil rangda yozish
                     animateChars('text2-part1', () => {
                         animateChars('text2-part2', () => {
-                            // Ikonkalarni faqat "Kamchatskiy" yozib bo'lingandan keyin ko'rsatish
+                            // Ikonkalarni ko'rsatish
                             document.getElementById('icons-container').classList.add('show');
                         });
                     });
-                }, 800);
+                }, 600);
             }, 3000);
 
-            // 4. Loader yopilishi
+            // Loader yopilishi
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
@@ -201,7 +198,7 @@
             for (let i = 0; i < 40; i++) {
                 const leaf = document.createElement('div');
                 leaf.className = 'leaf';
-                leaf.style.width = leaf.style.height = (Math.random() * 10 + 5) + 'px';
+                leaf.style.width = leaf.style.height = (Math.random() * 8 + 5) + 'px';
                 leaf.style.left = Math.random() * 100 + '%';
                 leaf.style.animationDuration = (Math.random() * 3 + 4) + 's';
                 leaf.style.animationDelay = Math.random() * 5 + 's';
