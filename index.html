@@ -358,21 +358,57 @@
             if(tab === 'archive') renderArchive();
         }
 
+                // 1. Oylarni nomlash uchun lug'at
+        const monthNames = [
+            "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+            "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"
+        ];
+
         function checkMonthTransition() {
             const now = new Date();
-            const key = `${now.getFullYear()}-${now.getMonth()}`;
-            const lastKey = localStorage.getItem('tkk_last_month');
-            if (lastKey && lastKey !== key) {
+            // Joriy oy va yilni inson tilida yaratish (masalan: 2026-Mart)
+            const currentMonthKey = `${now.getFullYear()}-${monthNames[now.getMonth()]}`;
+            const lastMonthKey = localStorage.getItem('tkk_last_month');
+
+            // Agar yangi oyga o'tilgan bo'lsa
+            if (lastMonthKey && lastMonthKey !== currentMonthKey) {
                 let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
+                
+                // Agar joriy oyda ma'lumot bo'lsa, uni arxivga o'tkazish
                 if (cards.length > 0) {
-                    archives.push({ id: Date.now(), monthName: lastKey, total: cards.reduce((s, c) => s + c.total, 0) });
+                    archives.push({ 
+                        id: Date.now(), 
+                        monthName: lastMonthKey, // Eski oy nomi bilan saqlaydi
+                        total: cards.reduce((s, c) => s + c.total, 0) 
+                    });
                     localStorage.setItem('tkk_archives', JSON.stringify(archives));
+                    
+                    // Eski ma'lumotlarni o'chirib, yangi oy uchun tozalaymiz
                     localStorage.setItem('tkk_data', "[]");
                     cards = [];
                 }
             }
-            localStorage.setItem('tkk_last_month', key);
+            // Joriy oyni xotiraga yozib qo'yamiz
+            localStorage.setItem('tkk_last_month', currentMonthKey);
         }
+
+        function renderArchive() {
+            const container = document.getElementById('archive-container');
+            const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
+            container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Архив пусто</p>';
+            
+            archives.reverse().forEach(arc => {
+                container.innerHTML += `
+                <div class="card" style="border-left:8px solid var(--accent)">
+                    <small style="color:#7f8c8d">Доход за месяц</small>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                        <b style="font-size:1.1rem">${arc.monthName}</b>
+                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} рублей</b>
+                    </div>
+                </div>`;
+            });
+        }
+
 
         function renderArchive() {
             const container = document.getElementById('archive-container');
